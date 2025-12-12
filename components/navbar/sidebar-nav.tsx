@@ -1,7 +1,7 @@
-"use client";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+'use client';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Home,
   MessageSquare,
@@ -10,7 +10,7 @@ import {
   Settings,
   FileText,
   LucideIcon,
-} from "lucide-react";
+} from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
   Home,
@@ -34,10 +34,10 @@ const SidebarNav = ({ items }: SidebarNavProps) => {
   const pathname = usePathname();
   return (
     <nav className="space-y-1">
-      {items.map((item) => {
+      {items.map(item => {
         const isActive =
           pathname === item.href ||
-          (item.href !== "/" && pathname.startsWith(item.href));
+          (item.href !== '/' && pathname.startsWith(item.href));
         const Icon = iconMap[item.icon];
 
         return (
@@ -46,10 +46,10 @@ const SidebarNav = ({ items }: SidebarNavProps) => {
             href={item.href}
             // onClick={handleClose}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+              'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
               isActive
-                ? "bg-primary/10 text-primary"
-                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                ? 'bg-primary/10 text-primary'
+                : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
             )}
           >
             {Icon && <Icon className="h-5 w-5" />}

@@ -4,36 +4,36 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ChevronDown, LogOut, Settings, User } from "lucide-react";
-import { currentUser } from "@/utils/mockdata";
-import Link from "next/link";
+} from '@/components/ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
+import { currentUser } from '@/utils/mockdata';
+import Link from 'next/link';
 
 const NavbarUserButton = () => {
   return (
     <div className="flex items-center gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="gap-2 pl-2 pr-1">
+          <Button variant="ghost" className="gap-2 pr-1 pl-2">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
 
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            <ChevronDown className="text-muted-foreground h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="w-56 bg-surface border-border"
+          className="bg-surface border-border w-56"
         >
-          <div className="p-3 border-b border-border">
-            <p className="font-medium text-foreground">
+          <div className="border-border border-b p-3">
+            <p className="text-foreground font-medium">
               {currentUser.username}
             </p>
-            <p className="text-sm text-muted-foreground">{currentUser.email}</p>
+            <p className="text-muted-foreground text-sm">{currentUser.email}</p>
           </div>
           <DropdownMenuItem asChild>
             <Link href="/profile" className="cursor-pointer">

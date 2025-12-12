@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 const SidebarCloseButton = ({
   isOpen,
@@ -11,7 +11,7 @@ const SidebarCloseButton = ({
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+          className="bg-background/80 fixed inset-0 z-40 backdrop-blur-sm lg:hidden"
           onClick={onClose}
         />
       )}
