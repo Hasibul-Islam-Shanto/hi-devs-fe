@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -113,7 +113,7 @@
   }
 
   html {
-    font-family: "Work Sans", var(--font-geist-sans), sans-serif;
+    font-family: 'Work Sans', var(--font-geist-sans), sans-serif;
   }
 
   body {
