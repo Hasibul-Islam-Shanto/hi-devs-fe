@@ -1,16 +1,16 @@
-import React from "react";
-import { ArrowUp, MessageSquare, Bookmark, Clock, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Badge } from "../ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import React from 'react';
+import { ArrowUp, MessageSquare, Bookmark, Clock, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Badge } from '../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const QuestionCard = ({ question }: { question: any }) => {
   return (
-    <article className="rounded-2xl border border-border bg-surface p-5 shadow-card hover:shadow-elevated transition-shadow animate-slide-up">
+    <article className="border-border bg-surface shadow-card hover:shadow-elevated animate-slide-up rounded-2xl border p-5 transition-shadow">
       <div className="flex gap-4">
-        <div className="flex flex-col items-center gap-1 text-center min-w-15">
+        <div className="flex min-w-15 flex-col items-center gap-1 text-center">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -18,30 +18,30 @@ const QuestionCard = ({ question }: { question: any }) => {
           >
             <ArrowUp className="h-5 w-5" />
           </Button>
-          <span className="text-lg font-semibold text-foreground">
+          <span className="text-foreground text-lg font-semibold">
             {question.upvotes}
           </span>
-          <span className="text-xs text-muted-foreground">votes</span>
+          <span className="text-muted-foreground text-xs">votes</span>
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <Link
             href={`/questions/${question.id}`}
-            className="text-lg font-semibold text-foreground hover:text-primary transition-colors line-clamp-2"
+            className="text-foreground hover:text-primary line-clamp-2 text-lg font-semibold transition-colors"
           >
             {question.title}
           </Link>
-          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+          <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
             {question.excerpt}
           </p>
 
-          <div className="flex flex-wrap gap-2 mt-3">
+          <div className="mt-3 flex flex-wrap gap-2">
             {question.tags.map((tag: string) => (
               <Badge key={tag}>{tag}</Badge>
             ))}
           </div>
 
-          <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-4 flex items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
               <Avatar>
                 <AvatarImage
