@@ -2,8 +2,8 @@ import React from 'react';
 import { ArrowUp, MessageSquare, Bookmark, Clock, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Badge } from '../ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const QuestionCard = ({ question }: { question: any }) => {
@@ -18,19 +18,24 @@ const QuestionCard = ({ question }: { question: any }) => {
           >
             <ArrowUp className="h-5 w-5" />
           </Button>
-          <span className="text-foreground text-lg font-semibold">
-            {question.upvotes}
-          </span>
+          <span className="text-foreground text-lg font-semibold">{0}</span>
           <span className="text-muted-foreground text-xs">votes</span>
         </div>
 
         <div className="min-w-0 flex-1">
-          <Link
-            href={`/questions/${question.id}`}
-            className="text-foreground hover:text-primary line-clamp-2 text-lg font-semibold transition-colors"
-          >
-            {question.title}
-          </Link>
+          <div className="flex items-start gap-2">
+            <Link
+              href={`/questions/${question.id}`}
+              className="text-foreground hover:text-primary line-clamp-2 flex-1 text-lg font-semibold transition-colors"
+            >
+              {question.title}
+            </Link>
+            {question.isAnswered && (
+              <span className="shrink-0 rounded-md bg-green-500/20 px-2 py-1 text-xs font-medium text-green-500">
+                Answered
+              </span>
+            )}
+          </div>
           <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
             {question.excerpt}
           </p>
@@ -54,11 +59,11 @@ const QuestionCard = ({ question }: { question: any }) => {
             </div>
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
-              {question.createdAt}
+              <span>{question.postedAt}</span>
             </div>
             <div className="flex items-center gap-1">
               <MessageSquare className="h-4 w-4" />
-              {question.answersCount}
+              {question.answersCount} answers
             </div>
             <div className="flex items-center gap-1">
               <Eye className="h-4 w-4" />
@@ -68,12 +73,8 @@ const QuestionCard = ({ question }: { question: any }) => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            className="text-muted-foreground"
-          >
-            <Bookmark className="h-4 w-4" />
+          <Button variant="ghost" size="icon-sm">
+            <Bookmark className={`h-4 w-4 fill-current`} />
           </Button>
         </div>
       </div>
