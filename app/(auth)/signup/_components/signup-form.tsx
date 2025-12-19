@@ -1,14 +1,19 @@
 'use client';
+
+import { signup } from '@/actions/auth.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signupSchema, SignupSchemaType } from '@/schemas/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const SignupForm = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -18,12 +23,45 @@ const SignupForm = () => {
     mode: 'onBlur',
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
 
   const onSubmit = (data: SignupSchemaType) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        const response = await signup(
+          data.name,
+          data.username,
+          data.email,
+          data.password,
+        );
+        if (response.success) {
+          toast.success('Signed up successfully', {
+            duration: 1000,
+            position: 'top-center',
+            description: 'You have successfully created your account.',
+          });
+          router.push('/signin');
+        } else {
+          toast.error('Sign up failed!', {
+            duration: 2000,
+            position: 'top-center',
+            description:
+              response.message ||
+              'There was an error signing up. Please try again.',
+          });
+        }
+      } catch (error) {
+        toast.error('Sign up failed!', {
+          duration: 3000,
+          position: 'top-center',
+          description:
+            error instanceof Error
+              ? error.message
+              : 'There was an error signing up. Please try again.',
+        });
+      }
+    });
   };
-
-  console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -112,8 +150,17 @@ const SignupForm = () => {
         )}
       </div>
 
-      <Button type="submit" variant="gradient" className="w-full">
-        Create account
+      <Button
+        type="submit"
+        variant="gradient"
+        className="w-full"
+        disabled={isPending}
+      >
+        {isPending ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          'Create account'
+        )}
       </Button>
     </form>
   );

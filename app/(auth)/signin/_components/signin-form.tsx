@@ -1,15 +1,21 @@
 'use client';
+import { login } from '@/actions/auth.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signinSchema, SigninSchemaType } from '@/schemas/auth.schema';
+import { useAuthStore } from '@/store/auth.store';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const SigninForm = () => {
+  const router = useRouter();
+  const { setUser } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -19,8 +25,39 @@ const SigninForm = () => {
     mode: 'onBlur',
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
   const onSubmit = (data: SigninSchemaType) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        const response = await login(data.email, data.password);
+        setUser(response?.user);
+        toast.success('Signed in successfully', {
+          duration: 1000,
+          position: 'top-center',
+          description: 'You have successfully signed in to your account.',
+        });
+        if (response.success) {
+          router.push('/');
+        } else {
+          toast.error('Sign in failed!', {
+            duration: 2000,
+            position: 'top-center',
+            description:
+              response.message ||
+              'There was an error signing in. Please try again.',
+          });
+        }
+      } catch (error) {
+        toast.error('Sign in failed!', {
+          duration: 3000,
+          position: 'top-center',
+          description:
+            error instanceof Error
+              ? error.message
+              : 'There was an error signing in. Please try again.',
+        });
+      }
+    });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -75,8 +112,17 @@ const SigninForm = () => {
         )}
       </div>
 
-      <Button type="submit" variant="gradient" className="w-full">
-        Sign In
+      <Button
+        type="submit"
+        variant="gradient"
+        className="w-full"
+        disabled={isPending}
+      >
+        {isPending ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          'Sign In'
+        )}
       </Button>
     </form>
   );

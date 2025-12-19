@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Work_Sans } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
 
 const workSans = Work_Sans({
   variable: '--font-work-sans',
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en" className={workSans.variable}>
       <body className="bg-background text-foreground min-h-screen antialiased">
         {children}
+        <Toaster />
       </body>
     </html>
   );
