@@ -30,13 +30,14 @@ const SigninForm = () => {
     startTransition(async () => {
       try {
         const response = await login(data.email, data.password);
-        setUser(response?.user);
-        toast.success('Signed in successfully', {
-          duration: 1000,
-          position: 'top-center',
-          description: 'You have successfully signed in to your account.',
-        });
+
         if (response.success) {
+          setUser(response?.user);
+          toast.success('Signed in successfully', {
+            duration: 1000,
+            position: 'top-center',
+            description: 'You have successfully signed in to your account.',
+          });
           router.push('/');
         } else {
           toast.error('Sign in failed!', {

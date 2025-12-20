@@ -59,11 +59,12 @@ const NavbarUserButton = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive cursor-pointer">
-              <Button type="button" variant="link" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign out
-              </Button>
+            <DropdownMenuItem
+              className="text-destructive cursor-pointer"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

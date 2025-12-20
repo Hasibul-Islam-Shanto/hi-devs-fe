@@ -28,12 +28,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, request.url));
   }
 
-  if (
-    isPublicRoute(pathname) ||
-    (isProtectedRoute(pathname) && isAuthenticated)
-  ) {
-    return NextResponse.next();
-  }
   return NextResponse.next();
 }
 
