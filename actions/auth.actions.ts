@@ -1,21 +1,19 @@
 'use server';
 import { cookies } from 'next/headers';
+import env from '@/utils/env';
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signin`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+    const response = await fetch(`${env.apiBaseUrl}/api/auth/signin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
     if (response.ok) {
       const data = await response.json();
@@ -52,18 +50,15 @@ export const login = async (email: string, password: string) => {
 export const logoutFromServer = async () => {
   try {
     const cookieStore = await cookies();
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          refreshToken: cookieStore.get('refreshToken')?.value,
-        }),
+    const response = await fetch(`${env.apiBaseUrl}/api/auth/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        refreshToken: cookieStore.get('refreshToken')?.value,
+      }),
+    });
 
     if (response.ok) {
       cookieStore.delete('accessToken');
@@ -91,21 +86,18 @@ export const signup = async (
   password: string,
 ) => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          username,
-          email,
-          password,
-        }),
+    const response = await fetch(`${env.apiBaseUrl}/api/auth/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        name,
+        username,
+        email,
+        password,
+      }),
+    });
 
     if (response.ok) {
       const data = await response.json();
