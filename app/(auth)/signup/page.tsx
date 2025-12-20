@@ -25,11 +25,11 @@ const SignupPage = () => {
           <SignupForm />
           <p className="text-muted-foreground mt-4 text-center text-xs">
             By signing up, you agree to our{' '}
-            <Link href="/terms" className="text-primary hover:underline">
+            <Link href="/signup" className="text-primary hover:underline">
               Terms
             </Link>{' '}
             and{' '}
-            <Link href="/privacy" className="text-primary hover:underline">
+            <Link href="/signup" className="text-primary hover:underline">
               Privacy Policy
             </Link>
           </p>

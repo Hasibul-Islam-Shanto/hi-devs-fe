@@ -1,21 +1,82 @@
 'use client';
+import { login } from '@/actions/auth.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff } from 'lucide-react';
+import { signinSchema, SigninSchemaType } from '@/schemas/auth.schema';
+import { useAuthStore } from '@/store/auth.store';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const SigninForm = () => {
+  const router = useRouter();
+  const { setUser } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SigninSchemaType>({
+    resolver: zodResolver(signinSchema),
+    mode: 'onBlur',
+  });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
+  const onSubmit = (data: SigninSchemaType) => {
+    startTransition(async () => {
+      try {
+        const response = await login(data.email, data.password);
+
+        if (response.success) {
+          setUser(response?.user);
+          toast.success('Signed in successfully', {
+            duration: 1000,
+            position: 'top-center',
+            description: 'You have successfully signed in to your account.',
+          });
+          router.push('/');
+        } else {
+          toast.error('Sign in failed!', {
+            duration: 2000,
+            position: 'top-center',
+            description:
+              response.message ||
+              'There was an error signing in. Please try again.',
+          });
+        }
+      } catch (error) {
+        toast.error('Sign in failed!', {
+          duration: 3000,
+          position: 'top-center',
+          description:
+            error instanceof Error
+              ? error.message
+              : 'There was an error signing in. Please try again.',
+        });
+      }
+    });
+  };
   return (
-    <form className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" placeholder="you@example.com" />
+        <Input
+          {...register('email')}
+          id="email"
+          type="email"
+          placeholder="hidev@example.com"
+        />
+        {errors.email && (
+          <p className="text-destructive mt-1 text-xs">
+            {errors.email.message}
+          </p>
+        )}
       </div>
 
-      {/* Password */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="password">Password</Label>
@@ -28,6 +89,7 @@ const SigninForm = () => {
         </div>
         <div className="relative">
           <Input
+            {...register('password')}
             id="password"
             type={showPassword ? 'text' : 'password'}
             placeholder="••••••••"
@@ -44,10 +106,24 @@ const SigninForm = () => {
             )}
           </button>
         </div>
+        {errors.password && (
+          <p className="text-destructive mt-1 text-xs">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
-      <Button type="submit" variant="gradient" className="w-full">
-        Sign In
+      <Button
+        type="submit"
+        variant="gradient"
+        className="w-full"
+        disabled={isPending}
+      >
+        {isPending ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          'Sign In'
+        )}
       </Button>
     </form>
   );
