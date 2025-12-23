@@ -1,7 +1,6 @@
 import BlogCard from '@/components/layout/blog-card';
 import { mockBlogPosts } from '@/utils/mockdata';
 import Link from 'next/link';
-import React from 'react';
 
 const RecentBlogs = () => {
   return (
