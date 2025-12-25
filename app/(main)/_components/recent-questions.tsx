@@ -6,7 +6,6 @@ import Link from 'next/link';
 const RecentQuestions = async () => {
   const data = await get<QuestionResponse>('/api/questions');
   const questions = data.questions;
-  console.log('🚀 ~ RecentQuestions ~ questions:', questions);
 
   return (
     <section>

@@ -1,8 +1,12 @@
 import BlogCard from '@/components/layout/blog-card';
-import { mockBlogPosts } from '@/utils/mockdata';
+import { BlogResponse } from '@/types/blog';
+import { get } from '@/utils/fetcher';
 import Link from 'next/link';
 
-const RecentBlogs = () => {
+const RecentBlogs = async () => {
+  const response = await get<BlogResponse>('/api/blogs');
+  const blogs = response.blogs;
+
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
@@ -14,8 +18,8 @@ const RecentBlogs = () => {
         </Link>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        {mockBlogPosts.slice(0, 2).map(post => (
-          <BlogCard key={post.id} post={post} />
+        {blogs.map(blog => (
+          <BlogCard key={blog._id} blog={blog} />
         ))}
       </div>
     </section>

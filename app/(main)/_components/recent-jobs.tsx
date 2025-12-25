@@ -1,9 +1,12 @@
 import JobCard from '@/components/layout/job-card';
-import { mockJobs } from '@/utils/mockdata';
+import { JobResponse } from '@/types/job';
+import { get } from '@/utils/fetcher';
 import Link from 'next/link';
-import React from 'react';
 
-const RecentJobs = () => {
+const RecentJobs = async () => {
+  const response = await get<JobResponse>('/api/jobs');
+  const jobs = response.jobs;
+
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
@@ -13,8 +16,8 @@ const RecentJobs = () => {
         </Link>
       </div>
       <div className="space-y-3">
-        {mockJobs.slice(0, 3).map(job => (
-          <JobCard key={job.id} job={job} />
+        {jobs.map(job => (
+          <JobCard key={job._id} job={job} />
         ))}
       </div>
     </section>
