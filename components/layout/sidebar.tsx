@@ -16,7 +16,7 @@ const Sidebar = () => {
             className="w-full justify-start gap-2"
             asChild
           >
-            <Link href="/questions/ask">
+            <Link href="/questions/create">
               <PlusCircle className="h-4 w-4" />
               Ask Question
             </Link>
