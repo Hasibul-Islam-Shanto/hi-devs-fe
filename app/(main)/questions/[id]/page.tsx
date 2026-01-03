@@ -1,7 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { mockQuestions } from '@/utils/mockdata';
 import {
   ArrowLeft,
   ArrowUp,
@@ -9,14 +7,39 @@ import {
   MessageSquare,
   Bookmark,
   Share2,
-  Send,
-  Badge,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Question, QuestionResponse } from '@/types/question';
+import { get } from '@/utils/methods';
+import { formatDistanceToNow } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
+import MarkDownEditor from './_components/markdown-editor';
 
-const QuestionPage = () => {
-  const question = mockQuestions[0];
+const QuestionPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  let question: Question | null = null;
+  let error = null;
+  try {
+    const response = await get<QuestionResponse>(`/api/questions/${id}`);
+    question = response.question;
+  } catch (err) {
+    error = err;
+  }
+  if (error) {
+    return (
+      <div className="mx-auto max-w-4xl py-6">
+        <p className="text-center text-red-500">
+          Unable to load question right now. Please check back later.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="mx-auto max-w-4xl space-y-6 py-6">
@@ -43,19 +66,20 @@ const QuestionPage = () => {
             <div className="flex-1 space-y-4">
               <div>
                 <h1 className="text-foreground mb-2 text-2xl font-bold">
-                  {question.title}
+                  {question?.title}
                 </h1>
                 <div className="mb-4 flex flex-wrap gap-2">
-                  {question.tags.map(tag => (
+                  {question?.tags.map(tag => (
                     <Badge key={tag}>{tag}</Badge>
                   ))}
                 </div>
               </div>
 
               <div className="prose prose-invert max-w-none">
-                <p className="text-foreground/90 whitespace-pre-wrap">
-                  {question.content}
-                </p>
+                <MarkDownEditor value={question?.description || ''} />
+                {/* <p className="text-foreground/90 whitespace-pre-wrap">
+                  {question?.description}
+                </p> */}
               </div>
 
               <div className="border-border flex items-center justify-between border-t pt-4">
@@ -69,10 +93,10 @@ const QuestionPage = () => {
                   </Avatar>
                   <div>
                     <p className="text-foreground text-sm font-medium">
-                      {question.author.username}
+                      {question?.askedBy.username}
                     </p>
                     <p className="text-muted-foreground text-xs">
-                      Asked {new Date(question.createdAt).toLocaleDateString()}
+                      Asked {formatDistanceToNow(new Date(question!.createdAt))}
                     </p>
                   </div>
                 </div>

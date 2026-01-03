@@ -14,7 +14,6 @@ export const createQuestion = async (data: {
       isAuthenticated: true,
       token: cookieStore.get('accessToken')?.value || '',
     });
-    console.log('🚀 ~ createQuestion ~ response:', response);
     return response;
   } catch (error) {
     return {

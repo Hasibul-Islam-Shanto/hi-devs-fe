@@ -10,6 +10,7 @@ const RecentQuestions = async () => {
 
   try {
     const response = await get<QuestionsResponse>('/api/questions', {
+      params: { limit: 2, sortOrder: 'desc' },
       retry: 2,
       timeout: 5000,
     });

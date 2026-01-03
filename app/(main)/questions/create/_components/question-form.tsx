@@ -6,12 +6,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { QuestionFormData, QuestionSchema } from '@/schemas/question';
+import { logError } from '@/utils/apiError';
 import { zodResolver } from '@hookform/resolvers/zod';
-import MDEditor from '@uiw/react-md-editor';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import dynamic from 'next/dynamic';
+
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {
+  ssr: false,
+  loading: () => (
+    <div className="bg-muted flex h-44 items-center justify-center rounded-md border">
+      <p className="text-muted-foreground">Loading editor...</p>
+    </div>
+  ),
+});
 
 const QuestionForm = () => {
   const router = useRouter();
@@ -22,7 +33,7 @@ const QuestionForm = () => {
     formState: { errors },
     setValue,
     setError,
-
+    reset,
     getValues,
   } = useForm<QuestionFormData>({
     resolver: zodResolver(QuestionSchema),
@@ -52,9 +63,16 @@ const QuestionForm = () => {
       try {
         const response = await createQuestion(data);
         if (response.success) {
+          toast.success('Question created successfully!', {
+            description:
+              'You have created a new question. This will be visible on the questions list.',
+            position: 'top-center',
+            duration: 2000,
+          });
           router.push(`/questions`);
         }
       } catch (error) {
+        logError(error, 'QuestionForm');
         console.error(
           error instanceof Error
             ? error.message
@@ -135,10 +153,15 @@ const QuestionForm = () => {
         </div>
 
         <div className="border-border flex items-center justify-end gap-3 border-t pt-4">
-          <Button type="button" variant="ghost">
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isPending}
+            onClick={() => reset()}
+          >
             Cancel
           </Button>
-          <Button type="submit" variant="gradient">
+          <Button type="submit" variant="gradient" disabled={isPending}>
             {isPending ? 'Posting...' : 'Post Question'}
           </Button>
         </div>
