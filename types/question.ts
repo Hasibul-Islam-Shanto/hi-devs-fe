@@ -14,6 +14,12 @@ export interface Question {
 
 export interface QuestionResponse {
   success: boolean;
+  message?: string;
+  question: Question;
+}
+
+export interface QuestionsResponse {
+  success: boolean;
   questions: Question[];
   pagination: Pagination;
 }
