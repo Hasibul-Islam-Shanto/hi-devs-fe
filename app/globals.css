@@ -156,3 +156,8 @@
     transform: scale(1);
   }
 }
+
+.custom-md-editor .w-md-editor-toolbar {
+  border: none;
+  background: transparent;
+}

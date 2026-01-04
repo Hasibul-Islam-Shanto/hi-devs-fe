@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Bookmark,
   Share2,
+  ThumbsUp,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,6 +16,7 @@ import { get } from '@/utils/methods';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import MarkDownEditor from './_components/markdown-editor';
+import CommentBox from '@/components/comment/CommentBox';
 
 const QuestionPage = async ({
   params,
@@ -53,7 +55,7 @@ const QuestionPage = async ({
 
         <Card className="bg-surface border-border p-6">
           <div className="flex gap-4">
-            <div className="flex flex-col items-center gap-1">
+            {/* <div className="flex flex-col items-center gap-1">
               <Button variant="default" size="icon" className="h-8 w-8">
                 <ArrowUp className="h-4 w-4" />
               </Button>
@@ -61,7 +63,7 @@ const QuestionPage = async ({
               <Button variant="default" size="icon" className="h-8 w-8">
                 <ArrowDown className="h-4 w-4" />
               </Button>
-            </div>
+            </div> */}
 
             <div className="flex-1 space-y-4">
               <div>
@@ -77,30 +79,38 @@ const QuestionPage = async ({
 
               <div className="prose prose-invert max-w-none">
                 <MarkDownEditor value={question?.description || ''} />
-                {/* <p className="text-foreground/90 whitespace-pre-wrap">
-                  {question?.description}
-                </p> */}
               </div>
 
               <div className="border-border flex items-center justify-between border-t pt-4">
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
+                      src={question?.askedBy?.profileImage}
+                      alt={question?.askedBy?.username || 'User avatar'}
                     />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback className="font-bold">
+                      {question?.askedBy?.username
+                        ?.substring(0, 2)
+                        .toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-foreground text-sm font-medium">
                       {question?.askedBy.username}
                     </p>
                     <p className="text-muted-foreground text-xs">
-                      Asked {formatDistanceToNow(new Date(question!.createdAt))}
+                      Asked{' '}
+                      {formatDistanceToNow(new Date(question!.createdAt), {
+                        addSuffix: true,
+                      })}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm">
+                    <ThumbsUp className="mr-1 h-4 w-4" />
+                    Like
+                  </Button>
                   <Button variant="ghost" size="sm">
                     <Bookmark className="mr-1 h-4 w-4" />
                     Save
@@ -109,15 +119,14 @@ const QuestionPage = async ({
                     <Share2 className="mr-1 h-4 w-4" />
                     Share
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <MessageSquare className="mr-1 h-4 w-4" />
-                    Comment
-                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </Card>
+        <div>
+          <CommentBox />
+        </div>
       </div>
     </>
   );

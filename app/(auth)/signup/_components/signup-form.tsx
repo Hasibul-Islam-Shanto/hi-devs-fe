@@ -25,7 +25,6 @@ const SignupForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
-  console.log('Signup form errors:', errors);
   const onSubmit = (data: SignupSchemaType) => {
     startTransition(async () => {
       try {
