@@ -1,6 +1,5 @@
 import { Question, QuestionsResponse } from '@/types/question';
 import QuestionCard from './question-card';
-import { mockQuestions } from '@/utils/mockdata';
 import { logError } from '@/utils/apiError';
 import { SectionError } from '@/components/Errors';
 import { get } from '@/utils/methods';

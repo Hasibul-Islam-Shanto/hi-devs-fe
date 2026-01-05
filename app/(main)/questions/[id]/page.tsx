@@ -1,14 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  ArrowLeft,
-  ArrowUp,
-  ArrowDown,
-  MessageSquare,
-  Bookmark,
-  Share2,
-  ThumbsUp,
-} from 'lucide-react';
+import { ArrowLeft, Bookmark, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Question, QuestionResponse } from '@/types/question';
@@ -17,6 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import MarkDownEditor from './_components/markdown-editor';
 import CommentBox from '@/components/comment/CommentBox';
+import LikeButton from '@/components/buttons/like-button';
 
 const QuestionPage = async ({
   params,
@@ -107,10 +100,11 @@ const QuestionPage = async ({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm">
-                    <ThumbsUp className="mr-1 h-4 w-4" />
-                    Like
-                  </Button>
+                  <LikeButton
+                    id={question?._id || ''}
+                    likesCount={question?.likes?.length || 0}
+                    likes={question?.likes || []}
+                  />
                   <Button variant="ghost" size="sm">
                     <Bookmark className="mr-1 h-4 w-4" />
                     Save
