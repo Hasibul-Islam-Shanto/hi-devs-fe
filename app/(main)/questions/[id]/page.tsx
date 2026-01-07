@@ -8,8 +8,9 @@ import { get } from '@/utils/methods';
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import MarkDownEditor from './_components/markdown-editor';
-import CommentBox from '@/components/comment/CommentBox';
 import LikeButton from '@/components/buttons/like-button';
+import CommentsContainerLayout from '@/components/layout/comments-layout';
+import { likeQuestion } from '@/actions/question.actions';
 
 const QuestionPage = async ({
   params,
@@ -104,6 +105,7 @@ const QuestionPage = async ({
                     id={question?._id || ''}
                     likesCount={question?.likes?.length || 0}
                     likes={question?.likes || []}
+                    likeFunction={likeQuestion}
                   />
                   <Button variant="ghost" size="sm">
                     <Bookmark className="mr-1 h-4 w-4" />
@@ -119,7 +121,7 @@ const QuestionPage = async ({
           </div>
         </Card>
         <div>
-          <CommentBox />
+          <CommentsContainerLayout id={id} />
         </div>
       </div>
     </>

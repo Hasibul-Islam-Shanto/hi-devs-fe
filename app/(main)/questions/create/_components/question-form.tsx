@@ -14,6 +14,7 @@ import { useState, useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
+import { commands, ICommand } from '@uiw/react-md-editor';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {
   ssr: false,
@@ -23,6 +24,25 @@ const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {
     </div>
   ),
 });
+
+const MDEditorMarkdown = dynamic(
+  () => import('@uiw/react-md-editor').then(mod => mod.default.Markdown),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-muted-foreground">Loading preview...</div>
+    ),
+  },
+);
+
+const customCommands: ICommand[] = [
+  commands.bold,
+  commands.italic,
+  commands.link,
+  commands.code,
+  commands.codeBlock,
+  commands.checkedListCommand,
+];
 
 const QuestionForm = () => {
   const router = useRouter();
@@ -41,7 +61,9 @@ const QuestionForm = () => {
   });
   const [tagInput, setTagInput] = useState<string>('');
   const [isPending, startTransition] = useTransition();
+  const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
   const selectedTags = getValues('tags') || [];
+  const descriptionValue = getValues('description') || '';
 
   const handleAddTag = (tag: string) => {
     if (tag && !selectedTags.includes(tag) && selectedTags.length < 5) {
@@ -104,13 +126,76 @@ const QuestionForm = () => {
 
         <div className="space-y-2">
           <Label>Details</Label>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <MDEditor value={field.value} onChange={field.onChange} />
-            )}
-          />
+          <div className="border-border overflow-hidden rounded-lg border">
+            {/* Tabs */}
+            <div className="border-border bg-muted/30 flex border-b">
+              <button
+                type="button"
+                onClick={() => setActiveTab('write')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  activeTab === 'write'
+                    ? 'text-foreground border-primary bg-background border-b-2'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Write
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('preview')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  activeTab === 'preview'
+                    ? 'text-foreground border-primary bg-background border-b-2'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Preview
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="bg-background p-4">
+              {activeTab === 'write' ? (
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field }) => (
+                    <MDEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                      preview="edit"
+                      hideToolbar={false}
+                      commands={customCommands}
+                      extraCommands={[]}
+                      height={300}
+                      visibleDragbar={false}
+                      textareaProps={{
+                        placeholder:
+                          'Include all the information someone would need to answer your question...',
+                      }}
+                      className="custom-md-editor"
+                    />
+                  )}
+                />
+              ) : (
+                <div className="prose prose-invert min-h-75 max-w-none">
+                  {descriptionValue ? (
+                    <MDEditorMarkdown
+                      source={descriptionValue}
+                      style={{
+                        whiteSpace: 'pre-wrap',
+                        background: 'transparent',
+                      }}
+                    />
+                  ) : (
+                    <p className="text-muted-foreground italic">
+                      Nothing to preview. Write something first.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
           {errors.description && (
             <p className="text-sm text-red-500">{errors.description.message}</p>
           )}
@@ -127,7 +212,7 @@ const QuestionForm = () => {
                 onClick={() => handleRemoveTag(tag)}
               >
                 {tag}
-                <X />
+                <X className="ml-1 h-3 w-3" />
               </Badge>
             ))}
           </div>

@@ -3,7 +3,6 @@
 import { ThumbsUp } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useState, useTransition } from 'react';
-import { likeQuestion } from '@/actions/question.actions';
 import { useAuthStore } from '@/store/auth.store';
 import { logError } from '@/utils/apiError';
 
@@ -11,19 +10,21 @@ const LikeButton = ({
   id,
   likesCount,
   likes,
+  likeFunction,
 }: {
   id: string;
   likesCount: number;
   likes: string[];
+  likeFunction: (id: string) => Promise<{ success: boolean }>;
 }) => {
   const { user, isLoggedIn } = useAuthStore();
   const [isPending, startTransition] = useTransition();
   const [optimisticLikes, setOptimisticLikes] = useState(likesCount);
   const [isLiked, setIsLiked] = useState(
-    likes.includes(user?.id || '') || false,
+    likes.includes(user?._id || '') || false,
   );
   const [isAnimating, setIsAnimating] = useState(false);
-  const initialLiked = likes.includes(user?.id || '') || false;
+  const initialLiked = likes.includes(user?._id || '') || false;
 
   const handleLike = async () => {
     setIsAnimating(true);
@@ -34,7 +35,7 @@ const LikeButton = ({
 
     startTransition(async () => {
       try {
-        const response = await likeQuestion(id);
+        const response = await likeFunction(id);
         if (!response.success) {
           setOptimisticLikes(likesCount);
           setIsLiked(initialLiked);
@@ -57,7 +58,7 @@ const LikeButton = ({
       size="sm"
       onClick={handleLike}
       disabled={isPending}
-      className={`transition-all duration-200 ${
+      className={`py-1! transition-all duration-200 ${
         isAnimating ? 'scale-110' : 'scale-100'
       }`}
     >

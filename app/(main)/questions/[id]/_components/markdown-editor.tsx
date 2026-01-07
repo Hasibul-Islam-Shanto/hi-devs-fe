@@ -13,7 +13,12 @@ const MDEditorMarkdown = dynamic(
 );
 
 const MarkDownEditor = ({ value }: { value: string }) => {
-  return <MDEditorMarkdown source={value} style={{ whiteSpace: 'pre-wrap' }} />;
+  return (
+    <MDEditorMarkdown
+      source={value}
+      style={{ whiteSpace: 'pre-wrap', background: 'transparent' }}
+    />
+  );
 };
 
 export default MarkDownEditor;

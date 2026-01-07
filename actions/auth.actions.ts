@@ -21,7 +21,7 @@ export const login = async (email: string, password: string) => {
       cookieStore.set('accessToken', data.tokens.accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 30,
+        maxAge: 60 * 60,
       });
 
       cookieStore.set('refreshToken', data.tokens.refreshToken, {

@@ -22,7 +22,7 @@ const QuestionsHeader = () => {
           </p>
         </div>
         <Button variant="gradient" asChild>
-          <Link href="/questions/ask">Ask Question</Link>
+          <Link href="/questions/create">Ask Question</Link>
         </Button>
       </header>
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center">

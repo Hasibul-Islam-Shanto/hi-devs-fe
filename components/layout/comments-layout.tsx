@@ -1,0 +1,42 @@
+import { IComment, ICommentsResponse } from '@/types/comment';
+import CommentBox from '../comment/CommentBox';
+import CommentsContainer from '../comment/comments-container';
+import { get } from '@/utils/methods';
+
+const CommentsContainerLayout = async ({ id }: { id: string }) => {
+  let comments: IComment[] = [];
+  let pagination = null;
+  let error = null;
+
+  try {
+    const response = await get<ICommentsResponse>(
+      `/api/comments/${'Question'}/${id}`,
+      {
+        retry: 2,
+        timeout: 5000,
+      },
+    );
+    comments = response.data;
+    pagination = response.pagination;
+  } catch (err) {
+    error = err;
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500">
+        Unable to load comments at the moment. Please try again later.
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <p>Comments ({pagination?.totalItems || 0})</p>
+      <CommentBox id={id} />
+      <CommentsContainer comments={comments} />
+    </div>
+  );
+};
+
+export default CommentsContainerLayout;
