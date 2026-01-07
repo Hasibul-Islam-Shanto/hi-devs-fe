@@ -3,14 +3,20 @@ import CommentBox from '../comment/CommentBox';
 import CommentsContainer from '../comment/comments-container';
 import { get } from '@/utils/methods';
 
-const CommentsContainerLayout = async ({ id }: { id: string }) => {
+const CommentsContainerLayout = async ({
+  id,
+  commentableType,
+}: {
+  id: string;
+  commentableType: 'Question' | 'Blog' | 'Job';
+}) => {
   let comments: IComment[] = [];
   let pagination = null;
   let error = null;
 
   try {
     const response = await get<ICommentsResponse>(
-      `/api/comments/${'Question'}/${id}`,
+      `/api/comments/${commentableType}/${id}`,
       {
         retry: 2,
         timeout: 5000,

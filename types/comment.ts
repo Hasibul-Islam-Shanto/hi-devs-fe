@@ -1,7 +1,7 @@
 import { Pagination } from './common';
 import { User } from './user.type';
 
-export interface ICommnetCreateProps {
+export interface ICommentCreateProps {
   commentableType: 'Question' | 'Blog' | 'Job';
   commentableId: string;
   comment: string;

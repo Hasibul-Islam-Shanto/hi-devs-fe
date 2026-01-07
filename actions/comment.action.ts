@@ -1,11 +1,11 @@
 'use server';
 
-import { ICommentResponse, ICommnetCreateProps } from '@/types/comment';
+import { ICommentCreateProps, ICommentResponse } from '@/types/comment';
 import { del, post } from '@/utils/methods';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
-export const addComment = async (data: ICommnetCreateProps) => {
+export const addComment = async (data: ICommentCreateProps) => {
   try {
     const cookieStore = await cookies();
     const response = await post<ICommentResponse>(
