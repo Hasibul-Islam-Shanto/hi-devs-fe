@@ -12,11 +12,14 @@ import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth.store';
 import { logoutFromServer } from '@/actions/auth.actions';
+import { useRouter } from 'next/navigation';
 
 const NavbarUserButton = () => {
+  const router = useRouter();
   const { logout, isLoggedIn, user } = useAuthStore();
   const handleLogout = async () => {
     logout();
+    router.push('/');
     await logoutFromServer();
   };
   return (
