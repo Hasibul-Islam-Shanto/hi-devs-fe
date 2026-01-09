@@ -3,7 +3,6 @@ export const AUTH_ROUTES = ['/signin', '/signup', '/forgot-password'];
 export const PROTECTED_ROUTES = [
   '/blogs/create',
   '/questions/create',
-  '/questions/ask',
   '/jobs/create',
   '/profile',
   '/settings',

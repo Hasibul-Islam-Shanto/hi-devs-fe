@@ -1,20 +1,21 @@
 'use client';
 
-import { createQuestion } from '@/actions/question.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { QuestionFormData, QuestionSchema } from '@/schemas/question';
-import { logError } from '@/utils/apiError';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Loader2, X } from 'lucide-react';
 import { useState, useTransition } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
 import { commands, ICommand } from '@uiw/react-md-editor';
+import { Controller, useForm } from 'react-hook-form';
+import { BlogFormData, blogSchema } from '@/schemas/blog.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createBlog } from '@/actions/blog.actions';
+import { DEFAULT_COVER } from '@/utils/data';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import Image from 'next/image';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), {
   ssr: false,
@@ -42,64 +43,79 @@ const customCommands: ICommand[] = [
   commands.code,
   commands.codeBlock,
   commands.checkedListCommand,
+  commands.unorderedListCommand,
 ];
 
-const QuestionForm = () => {
+const BlogForm = () => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    reset,
     setValue,
     setError,
-    reset,
     getValues,
-  } = useForm<QuestionFormData>({
-    resolver: zodResolver(QuestionSchema),
+    formState: { errors },
+  } = useForm<BlogFormData>({
+    resolver: zodResolver(blogSchema),
     mode: 'onBlur',
   });
-  const [tagInput, setTagInput] = useState<string>('');
-  const [isPending, startTransition] = useTransition();
+
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
   const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
-  const selectedTags = getValues('tags') || [];
-  const descriptionValue = getValues('description') || '';
+  const [isPending, startTransition] = useTransition();
+
+  const cover = getValues('cover');
+  const description = getValues('description');
 
   const handleAddTag = (tag: string) => {
     if (tag && !selectedTags.includes(tag) && selectedTags.length < 5) {
-      setTagInput('');
+      setSelectedTags([...selectedTags, tag]);
       setValue('tags', [...selectedTags, tag]);
       setError('tags', {});
+      setTagInput('');
     }
   };
 
   const handleRemoveTag = (tag: string) => {
+    setSelectedTags(selectedTags.filter(t => t !== tag));
     setValue(
       'tags',
       selectedTags.filter(t => t !== tag),
     );
+    setError('tags', {});
   };
 
-  const onSubmit = async (data: QuestionFormData) => {
+  const onSubmit = async (data: BlogFormData) => {
     startTransition(async () => {
       try {
-        const response = await createQuestion(data);
+        const response = await createBlog({
+          ...data,
+          cover: data.cover || DEFAULT_COVER,
+        });
         if (response.success) {
-          toast.success('Question created successfully!', {
-            description:
-              'You have created a new question. This will be visible on the questions list.',
+          router.push('/blogs');
+          toast.success(response.message, {
             position: 'top-center',
             duration: 2000,
           });
-          router.push(`/questions`);
+        } else {
+          toast.error(response.message, {
+            position: 'top-center',
+            duration: 2000,
+          });
         }
       } catch (error) {
-        logError(error, 'QuestionForm');
-        console.error(
-          error instanceof Error
-            ? error.message
-            : 'There was an error creating the question. Please try again.',
-        );
+        toast.error('Unable to Post a Blog', {
+          position: 'top-center',
+          duration: 2000,
+          description:
+            error instanceof Error
+              ? error.message
+              : 'There was an error creating the blog. Please try again.',
+        });
       }
     });
   };
@@ -108,24 +124,46 @@ const QuestionForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="border-border bg-surface shadow-card space-y-6 rounded-2xl border p-6">
         <div className="space-y-2">
+          <Label htmlFor="cover">Cover Image URL (optional)</Label>
+          <Input
+            {...register('cover')}
+            id="cover"
+            placeholder="https://example.com/image.jpg"
+          />
+          {cover && (
+            <div className="bg-muted relative aspect-video overflow-hidden rounded-lg">
+              <Image
+                src={cover}
+                alt="Cover preview"
+                height={225}
+                width={400}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          )}
+          <p className="text-muted-foreground text-xs">
+            Add a cover image to make your blog post more engaging
+          </p>
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
           <Input
             {...register('title')}
             id="title"
-            placeholder="What's your programming question? Be specific."
+            placeholder="An engaging title for your blog post"
             className="text-lg"
           />
           <p className="text-muted-foreground text-xs">
-            Be specific and imagine you&apos;re asking a question to another
-            person
+            Write a clear and descriptive title for your blog post
           </p>
-          {errors.title && (
-            <p className="text-sm text-red-500">{errors.title.message}</p>
+          {errors.description && (
+            <p className="text-sm text-red-500">{errors.description.message}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label>Details</Label>
+          <Label>Content</Label>
           <div className="border-border overflow-hidden rounded-lg border">
             <div className="border-border bg-muted/30 flex border-b">
               <button
@@ -176,10 +214,10 @@ const QuestionForm = () => {
                   )}
                 />
               ) : (
-                <div className="prose prose-invert min-h-75 max-w-none">
-                  {descriptionValue ? (
+                <div className="prose prose-invert min-h-100 max-w-none">
+                  {description ? (
                     <MDEditorMarkdown
-                      source={descriptionValue}
+                      source={description}
                       style={{
                         whiteSpace: 'pre-wrap',
                         background: 'transparent',
@@ -228,7 +266,7 @@ const QuestionForm = () => {
             />
           </div>
           <p className="text-muted-foreground text-xs">
-            Add up to 5 tags to describe what your question is about
+            Add up to 5 tags to help readers discover your blog post
           </p>
           {errors.tags && (
             <p className="text-sm text-red-500">{errors.tags.message}</p>
@@ -239,13 +277,26 @@ const QuestionForm = () => {
           <Button
             type="button"
             variant="ghost"
-            disabled={isPending}
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              setSelectedTags([]);
+              setTagInput('');
+            }}
           >
             Cancel
           </Button>
+          <Button type="button" variant="outline">
+            Save Draft
+          </Button>
           <Button type="submit" variant="gradient" disabled={isPending}>
-            {isPending ? 'Posting...' : 'Post Question'}
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Publishing...
+              </>
+            ) : (
+              'Publish Blog'
+            )}
           </Button>
         </div>
       </div>
@@ -253,4 +304,4 @@ const QuestionForm = () => {
   );
 };
 
-export default QuestionForm;
+export default BlogForm;

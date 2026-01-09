@@ -20,7 +20,13 @@ export const addComment = async (data: ICommentCreateProps) => {
         token: cookieStore.get('accessToken')?.value || '',
       },
     );
-    revalidatePath(`/questions/${data.commentableId}`);
+    if (data.commentableType === 'Question') {
+      revalidatePath(`/questions/${data.commentableId}`);
+    } else if (data.commentableType === 'Blog') {
+      revalidatePath(`/blogs/${data.commentableId}`);
+    } else if (data.commentableType === 'Job') {
+      revalidatePath(`/jobs/${data.commentableId}`);
+    }
     return {
       success: true,
       message: response.message,

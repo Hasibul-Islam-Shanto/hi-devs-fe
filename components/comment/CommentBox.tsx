@@ -40,7 +40,13 @@ const commentSchema = z.object({
 });
 type CommentFormData = z.infer<typeof commentSchema>;
 
-const CommentBox = ({ id }: { id: string }) => {
+const CommentBox = ({
+  id,
+  commentableType,
+}: {
+  id: string;
+  commentableType: 'Question' | 'Blog' | 'Job';
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -69,7 +75,7 @@ const CommentBox = ({ id }: { id: string }) => {
     startTransition(async () => {
       try {
         const response = await addComment({
-          commentableType: 'Question',
+          commentableType: commentableType,
           commentableId: id,
           comment: data.comment,
         });
