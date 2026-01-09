@@ -39,7 +39,7 @@ const CommentsContainerLayout = async ({
   return (
     <div className="space-y-5">
       <p>Comments ({pagination?.totalItems || 0})</p>
-      <CommentBox id={id} />
+      <CommentBox id={id} commentableType={commentableType} />
       <CommentsContainer comments={comments} />
     </div>
   );

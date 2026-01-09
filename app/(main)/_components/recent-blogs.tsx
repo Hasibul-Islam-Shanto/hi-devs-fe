@@ -1,6 +1,6 @@
 import { SectionError } from '@/components/Errors';
 import BlogCard from '@/components/layout/blog-card';
-import { Blog, BlogResponse } from '@/types/blog';
+import { Blog, BlogsResponse } from '@/types/blog';
 import { logError } from '@/utils/apiError';
 import { get } from '@/utils/methods';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ const RecentBlogs = async () => {
   let error = null;
 
   try {
-    const response = await get<BlogResponse>('/api/blogs', {
+    const response = await get<BlogsResponse>('/api/blogs', {
       retry: 2,
       timeout: 5000,
     });

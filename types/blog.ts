@@ -6,6 +6,7 @@ export interface Blog {
   title: string;
   description: string;
   tags: string[];
+  cover: string;
   postedBy: User;
   likes: string[];
   createdAt: string;
@@ -13,6 +14,12 @@ export interface Blog {
 }
 
 export interface BlogResponse {
+  success: boolean;
+  message: string;
+  blog: Blog;
+}
+
+export interface BlogsResponse {
   success: boolean;
   blogs: Blog[];
   pagination: Pagination;
