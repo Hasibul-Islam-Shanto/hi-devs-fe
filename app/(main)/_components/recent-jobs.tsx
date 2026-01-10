@@ -1,6 +1,6 @@
 import { SectionError } from '@/components/Errors';
 import JobCard from '@/components/layout/job-card';
-import { Job, JobResponse } from '@/types/job';
+import { Job, JobsResponse } from '@/types/job';
 import { get } from '@/utils/methods';
 import Link from 'next/link';
 
@@ -9,7 +9,7 @@ const RecentJobs = async () => {
   let error = null;
 
   try {
-    const response = await get<JobResponse>('/api/jobs', {
+    const response = await get<JobsResponse>('/api/jobs', {
       retry: 2,
       timeout: 5000,
     });
