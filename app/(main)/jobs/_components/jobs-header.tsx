@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { mockJobs } from '@/utils/mockdata';
-import { Briefcase, MapPin, Search } from 'lucide-react';
+import { ArrowRight, Briefcase, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 
 const JobsHeader = () => {
@@ -22,7 +22,10 @@ const JobsHeader = () => {
           </p>
         </div>
         <Button variant="gradient" asChild>
-          <Link href="/jobs/post">Post a Job</Link>
+          <Link href="/jobs/create">
+            Post a Job
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </Button>
       </header>
 
