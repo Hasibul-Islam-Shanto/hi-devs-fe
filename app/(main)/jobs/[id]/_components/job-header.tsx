@@ -1,7 +1,6 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Job } from '@/types/job';
 import {
@@ -11,7 +10,7 @@ import {
   DollarSign,
   Calendar,
 } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 
 const JobHeader = ({ job }: { job: Job }) => {
   const timeAgo = formatDistanceToNow(new Date(job.createdAt), {

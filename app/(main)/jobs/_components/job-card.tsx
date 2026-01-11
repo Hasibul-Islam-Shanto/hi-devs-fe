@@ -82,16 +82,15 @@ const JobCard = ({ job }: { job: Job }) => {
             <Clock className="h-4 w-4" />
             {timeAgo}
           </div>
-          <Button
-            variant={job.status === 'Open' ? 'gradient' : 'outline'}
-            size="sm"
-            asChild
-            disabled={job.status === 'Closed'}
-          >
-            <Link href={`/jobs/${job._id}`}>
-              {job.status === 'Open' ? 'View Details' : 'View Job'}
-            </Link>
-          </Button>
+          {job?.status === 'Open' ? (
+            <Button variant="gradient" size="sm" asChild>
+              <Link href={`/jobs/${job._id}`}>View Details</Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" disabled>
+              View Job
+            </Button>
+          )}
         </div>
       </div>
     </article>

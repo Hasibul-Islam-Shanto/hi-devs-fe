@@ -107,6 +107,7 @@ const JobForm = () => {
             duration: 2000,
             position: 'top-center',
           });
+          reset();
           router.push('/jobs');
         } else {
           toast.error(
@@ -125,8 +126,6 @@ const JobForm = () => {
         description:
           error instanceof Error ? error.message : 'Please try again later.',
       });
-    } finally {
-      reset();
     }
   };
 

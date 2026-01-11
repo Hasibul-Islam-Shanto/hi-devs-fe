@@ -1,6 +1,5 @@
 import { Job, JobsResponse } from '@/types/job';
 import JobCard from './job-card';
-import { mockJobs } from '@/utils/mockdata';
 import { get } from '@/utils/methods';
 
 const JobsContainer = async () => {
