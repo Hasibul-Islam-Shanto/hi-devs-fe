@@ -25,6 +25,7 @@ export interface Job {
   status: string;
   createdAt: string;
   updatedAt: string;
+  expiresAt?: string;
 }
 export interface JobResponse {
   success: boolean;
