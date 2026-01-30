@@ -45,7 +45,7 @@ const CommentBox = ({
   commentableType,
 }: {
   id: string;
-  commentableType: 'Question' | 'Blog' | 'Job';
+  commentableType: 'QUESTION' | 'BLOG' | 'JOB';
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');

@@ -1,9 +1,7 @@
 import { Badge } from '@/components/ui/badge';
-import { Bookmark, Heart, MessageSquare, Send, Share2 } from 'lucide-react';
+import { Bookmark, Share2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { Blog, BlogResponse } from '@/types/blog';
 import { get } from '@/utils/methods';
 import Image from 'next/image';
@@ -120,7 +118,7 @@ const BlogPage = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </article>
 
-      <CommentsContainerLayout id={blog?._id} commentableType="Blog" />
+      <CommentsContainerLayout id={blog?._id} commentableType="BLOG" />
     </div>
   );
 };

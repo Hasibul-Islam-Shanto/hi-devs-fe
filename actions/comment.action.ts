@@ -20,11 +20,11 @@ export const addComment = async (data: ICommentCreateProps) => {
         token: cookieStore.get('accessToken')?.value || '',
       },
     );
-    if (data.commentableType === 'Question') {
+    if (data.commentableType === 'QUESTION') {
       revalidatePath(`/questions/${data.commentableId}`);
-    } else if (data.commentableType === 'Blog') {
+    } else if (data.commentableType === 'BLOG') {
       revalidatePath(`/blogs/${data.commentableId}`);
-    } else if (data.commentableType === 'Job') {
+    } else if (data.commentableType === 'JOB') {
       revalidatePath(`/jobs/${data.commentableId}`);
     }
     return {

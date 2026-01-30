@@ -121,7 +121,7 @@ const QuestionPage = async ({
           </div>
         </Card>
 
-        <CommentsContainerLayout id={id} commentableType="Question" />
+        <CommentsContainerLayout id={id} commentableType="QUESTION" />
       </div>
     </>
   );

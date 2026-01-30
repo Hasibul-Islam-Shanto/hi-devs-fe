@@ -2,6 +2,7 @@ import { Search } from 'lucide-react';
 import Link from 'next/link';
 import MobileNavigationButton from '../buttons/mobile-navigation-button';
 import NavbarUserButton from '../buttons/navbar-user-button';
+import NotificationButton from '../navbar/notification-button';
 
 const Navbar = () => {
   return (
@@ -32,7 +33,10 @@ const Navbar = () => {
             />
           </div>
         </div>
-        <NavbarUserButton />
+        <div className="flex items-center gap-2">
+          <NotificationButton />
+          <NavbarUserButton />
+        </div>
       </nav>
     </header>
   );
