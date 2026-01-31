@@ -20,6 +20,11 @@ export interface INotification {
 
 export interface INotificationResponse {
   success: boolean;
+  message: string;
+  data: INotification;
+}
+export interface INotificationsResponse {
+  success: boolean;
   notifications: INotification[];
   pagiantion: Pagination;
 }

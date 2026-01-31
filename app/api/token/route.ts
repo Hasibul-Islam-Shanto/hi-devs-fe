@@ -7,8 +7,19 @@ export async function GET() {
   const accessToken = cookieStore.get('accessToken')?.value || null;
   const refreshToken = cookieStore.get('refreshToken')?.value || null;
 
+  const isTokenExpired = (token: string) => {
+    try {
+      const [, payload] = token.split('.');
+      if (!payload) return true;
+      const decoded = JSON.parse(Buffer.from(payload, 'base64').toString());
+      return decoded.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  };
+
   try {
-    if (!accessToken) {
+    if (!accessToken || isTokenExpired(accessToken)) {
       if (!refreshToken) {
         return NextResponse.json({
           success: false,

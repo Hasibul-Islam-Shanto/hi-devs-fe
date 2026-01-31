@@ -1,5 +1,6 @@
 import { ApiError } from './apiError';
 import env from './env';
+import { refreshToken } from './refreshToken';
 
 type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
@@ -10,6 +11,7 @@ export interface FetchOptions extends Omit<RequestInit, 'method' | 'body'> {
   timeout?: number;
   retry?: number;
   retryDelay?: number;
+  isRetry?: boolean;
 }
 
 const buildUrl = (
@@ -64,12 +66,24 @@ export const fetcher = async <T>(
       const response = await fetch(fullURL, config);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new ApiError(
-          errorData.message || `Request failed with status ${response.status}`,
-          response.status,
-          errorData.code,
-        );
+        if (response.status === 401 && !options?.isRetry) {
+          try {
+            const newToken = await refreshToken();
+            return await fetcher<T>(method, url, data, {
+              ...options,
+              token: newToken,
+              isRetry: true,
+            });
+          } catch {
+            const errorData = await response.json().catch(() => ({}));
+            throw new ApiError(
+              errorData.message ||
+                `Request failed with status ${response.status}`,
+              response.status,
+              errorData.code,
+            );
+          }
+        }
       }
 
       clearTimeout(timeoutId);

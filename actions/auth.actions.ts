@@ -19,13 +19,13 @@ export const login = async (email: string, password: string) => {
       const data = await response.json();
       const cookieStore = await cookies();
       cookieStore.set('accessToken', data.tokens.accessToken, {
-        // httpOnly: true,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60,
       });
 
       cookieStore.set('refreshToken', data.tokens.refreshToken, {
-        // httpOnly: true,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 24 * 30,
       });
