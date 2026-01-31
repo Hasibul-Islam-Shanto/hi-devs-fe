@@ -2,7 +2,7 @@ import { Pagination } from './common';
 import { User } from './user.type';
 
 export interface ICommentCreateProps {
-  commentableType: 'Question' | 'Blog' | 'Job';
+  commentableType: 'QUESTION' | 'BLOG' | 'JOB';
   commentableId: string;
   comment: string;
 }
@@ -10,7 +10,7 @@ export interface ICommentCreateProps {
 export interface IComment {
   commentor: User;
   userId: string;
-  commentableType: 'Question' | 'Blog' | 'Job';
+  commentableType: 'QUESTION' | 'BLOG' | 'JOB';
   commentableId: string;
   comment: string;
   likes: string[];

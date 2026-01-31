@@ -8,7 +8,7 @@ const CommentsContainerLayout = async ({
   commentableType,
 }: {
   id: string;
-  commentableType: 'Question' | 'Blog' | 'Job';
+  commentableType: 'QUESTION' | 'BLOG' | 'JOB';
 }) => {
   let comments: IComment[] = [];
   let pagination = null;
@@ -25,6 +25,7 @@ const CommentsContainerLayout = async ({
     comments = response.data;
     pagination = response.pagination;
   } catch (err) {
+    console.log('🚀 ~ CommentsContainerLayout ~ err:', err);
     error = err;
   }
 
