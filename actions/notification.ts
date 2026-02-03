@@ -16,10 +16,13 @@ export const deleteNotification = async (notificationId: string) => {
   }
 
   try {
-    const response = await del<INotificationResponse>(`/api/notifications/${notificationId}`, {
-      isAuthenticated: true,
-      token: cookieStore.get('accessToken')?.value || '',
-    });
+    const response = await del<INotificationResponse>(
+      `/api/notifications/${notificationId}`,
+      {
+        isAuthenticated: true,
+        token: cookieStore.get('accessToken')?.value || '',
+      },
+    );
 
     revalidatePath('/notifications');
 

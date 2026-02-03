@@ -25,7 +25,6 @@ const CommentsContainerLayout = async ({
     comments = response.data;
     pagination = response.pagination;
   } catch (err) {
-    console.log('🚀 ~ CommentsContainerLayout ~ err:', err);
     error = err;
   }
 

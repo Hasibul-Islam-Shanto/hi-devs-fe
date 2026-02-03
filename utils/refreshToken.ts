@@ -8,7 +8,7 @@ export const refreshToken = async (): Promise<any> => {
   }
 
   isRefreshing = true;
-  refreshPromise = fetch('/api/token', {
+  refreshPromise = fetch('http://localhost:3000/api/token', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
