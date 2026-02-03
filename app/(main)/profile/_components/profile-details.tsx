@@ -29,7 +29,7 @@ const ProfileDetails = ({ user }: { user: User }) => {
               <p className="text-muted-foreground">{user.email}</p>
             </div>
             <Button variant="outline" asChild>
-              <Link href="/settings">
+              <Link href={`/profile/${user.id}/edit`}>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Profile
               </Link>
@@ -45,20 +45,25 @@ const ProfileDetails = ({ user }: { user: User }) => {
                 addSuffix: true,
               })}
             </div>
-            <Link
-              href="#"
-              className="hover:text-primary flex items-center gap-1.5 transition-colors"
-            >
-              <Github className="h-4 w-4" />
-              GitHub
-            </Link>
-            <Link
-              href="#"
-              className="hover:text-primary flex items-center gap-1.5 transition-colors"
-            >
-              <Twitter className="h-4 w-4" />
-              Twitter
-            </Link>
+            {user.socialLinks.github && (
+              <Link
+                href="#"
+                className="hover:text-primary flex items-center gap-1.5 transition-colors"
+              >
+                <Github className="h-4 w-4" />
+                GitHub
+              </Link>
+            )}
+
+            {user.socialLinks.twitter && (
+              <Link
+                href="#"
+                className="hover:text-primary flex items-center gap-1.5 transition-colors"
+              >
+                <Twitter className="h-4 w-4" />
+                Twitter
+              </Link>
+            )}
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
