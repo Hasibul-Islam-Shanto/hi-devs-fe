@@ -94,9 +94,12 @@ const QuestionPage = async ({
                     </p>
                     <p className="text-muted-foreground text-xs">
                       Asked{' '}
-                      {formatDistanceToNow(new Date(question!.createdAt), {
-                        addSuffix: true,
-                      })}
+                      {formatDistanceToNow(
+                        new Date(question?.createdAt || ''),
+                        {
+                          addSuffix: true,
+                        },
+                      )}
                     </p>
                   </div>
                 </div>
