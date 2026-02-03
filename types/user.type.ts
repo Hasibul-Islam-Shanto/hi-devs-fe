@@ -14,4 +14,11 @@ export interface User {
   };
   skills: string[];
   isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IUserResponse {
+  success: boolean;
+  user: User;
 }
