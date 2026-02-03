@@ -14,7 +14,6 @@ const ProfileDetails = ({ user }: { user: User }) => {
           <AvatarImage
             src={user?.profileImage}
             alt={user?.username || 'User'}
-            className="h-24 w-24"
           />
           <AvatarFallback className="font-bold">
             {user?.username?.substring(0, 2).toUpperCase()}
