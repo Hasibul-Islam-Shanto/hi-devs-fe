@@ -3,6 +3,8 @@ import { get } from '@/utils/methods';
 import JobHeader from './_components/job-header';
 import JobDescription from './_components/job-description';
 import JobSidebar from './_components/job-sidebar';
+import JobApplications from './_components/job-applications';
+import { Suspense } from 'react';
 
 const JobDetailsPage = async ({
   params,
@@ -11,9 +13,8 @@ const JobDetailsPage = async ({
 }) => {
   let job: Job | null = null;
   let error = null;
-
+  const { id } = await params;
   try {
-    const { id } = await params;
     const response = await get<{ job: Job }>(`/api/jobs/${id}`, {
       retry: 2,
       timeout: 5000,
@@ -40,6 +41,9 @@ const JobDetailsPage = async ({
         <div className="space-y-6 lg:col-span-2">
           <JobHeader job={job} />
           <JobDescription job={job} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <JobApplications jobId={id} />
+          </Suspense>
         </div>
 
         <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
