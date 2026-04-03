@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import {
+  applicationSchema,
+  ApplicationSchema,
+} from '@/schemas/applicatio.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { applyToJob } from '@/actions/application.actions';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface ApplyModalProps {
   open: boolean;
@@ -26,23 +35,46 @@ const ApplyModal = ({
   jobTitle,
   jobId,
 }: ApplyModalProps) => {
-  const [applicationForm, setApplicationForm] = useState({
-    name: '',
-    email: '',
-    resumeUrl: '',
-    coverLetter: '',
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ApplicationSchema>({
+    resolver: zodResolver(applicationSchema),
+    mode: 'all',
   });
+  const [isApplying, startApplying] = useTransition();
 
-  const handleApply = async () => {
-    if (!applicationForm.name || !applicationForm.email) {
-      toast.error('Please fill in required fields');
-      return;
+  const onSubmit = (data: ApplicationSchema) => {
+    try {
+      startApplying(async () => {
+        const response = await applyToJob({
+          jobId,
+          ...data,
+        });
+        if (response.success) {
+          toast.success(response.message, {
+            duration: 2000,
+            position: 'top-center',
+          });
+          reset();
+          onOpenChange(false);
+          router.push(`/jobs`);
+        } else {
+          toast.error(response.message || 'Failed to apply to job', {
+            duration: 2000,
+            position: 'top-center',
+          });
+        }
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to apply to job',
+      );
+      console.error(error);
     }
-
-    // TODO: Implement application submission
-    toast.success('Application submitted successfully!');
-    onOpenChange(false);
-    setApplicationForm({ name: '', email: '', resumeUrl: '', coverLetter: '' });
   };
 
   return (
@@ -53,63 +85,52 @@ const ApplyModal = ({
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Full Name *</Label>
-            <Input
-              value={applicationForm.name}
-              onChange={e =>
-                setApplicationForm({
-                  ...applicationForm,
-                  name: e.target.value,
-                })
-              }
-              placeholder="John Doe"
-              className="bg-muted border-border"
-            />
-          </div>
-          <div className="space-y-2">
             <Label>Email *</Label>
             <Input
+              {...register('email')}
               type="email"
-              value={applicationForm.email}
-              onChange={e =>
-                setApplicationForm({
-                  ...applicationForm,
-                  email: e.target.value,
-                })
-              }
               placeholder="john@example.com"
               className="bg-muted border-border"
             />
+            {errors.email && (
+              <p className="text-destructive mt-1 text-xs">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Resume URL</Label>
             <Input
-              value={applicationForm.resumeUrl}
-              onChange={e =>
-                setApplicationForm({
-                  ...applicationForm,
-                  resumeUrl: e.target.value,
-                })
-              }
+              {...register('resumeUrl')}
               placeholder="https://..."
               className="bg-muted border-border"
             />
+            {errors.resumeUrl && (
+              <p className="text-destructive mt-1 text-xs">
+                {errors.resumeUrl.message}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Cover Letter</Label>
             <Textarea
-              value={applicationForm.coverLetter}
-              onChange={e =>
-                setApplicationForm({
-                  ...applicationForm,
-                  coverLetter: e.target.value,
-                })
-              }
+              {...register('coverLetter')}
               placeholder="Why are you interested in this position?"
               className="bg-muted border-border min-h-[100px]"
             />
+            {errors.coverLetter && (
+              <p className="text-destructive mt-1 text-xs">
+                {errors.coverLetter.message}
+              </p>
+            )}
           </div>
-          <Button variant="gradient" className="w-full" onClick={handleApply}>
+          <Button
+            variant="gradient"
+            className="w-full"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isApplying}
+          >
+            {isApplying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Submit Application
           </Button>
         </div>
