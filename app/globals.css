@@ -120,9 +120,14 @@
   /* Shadow system */
   --shadow-xs: 0 1px 2px hsl(220 60% 2% / 0.3);
   --shadow-sm: 0 1px 3px hsl(220 60% 2% / 0.4), 0 1px 2px hsl(220 60% 2% / 0.3);
-  --shadow-md: 0 4px 6px -1px hsl(220 60% 2% / 0.4), 0 2px 4px -2px hsl(220 60% 2% / 0.3);
-  --shadow-lg: 0 10px 15px -3px hsl(220 60% 2% / 0.45), 0 4px 6px -4px hsl(220 60% 2% / 0.3);
-  --shadow-xl: 0 20px 25px -5px hsl(220 60% 2% / 0.5), 0 8px 10px -6px hsl(220 60% 2% / 0.3);
+  --shadow-md:
+    0 4px 6px -1px hsl(220 60% 2% / 0.4), 0 2px 4px -2px hsl(220 60% 2% / 0.3);
+  --shadow-lg:
+    0 10px 15px -3px hsl(220 60% 2% / 0.45),
+    0 4px 6px -4px hsl(220 60% 2% / 0.3);
+  --shadow-xl:
+    0 20px 25px -5px hsl(220 60% 2% / 0.5),
+    0 8px 10px -6px hsl(220 60% 2% / 0.3);
   --shadow-card: var(--shadow-sm);
   --shadow-card-hover: var(--shadow-lg);
   --shadow-elevated: var(--shadow-xl);
@@ -134,7 +139,7 @@
   }
 
   body {
-    @apply text-foreground antialiased min-h-screen;
+    @apply text-foreground min-h-screen antialiased;
     background-color: var(--color-background);
     background-image: radial-gradient(
       ellipse 120% 55% at 50% -15%,
